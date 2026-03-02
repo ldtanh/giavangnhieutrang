@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌟</text></svg>">
+    
+    <title>Giá vàng nhiều trang - by TuanAnhDepTrai</title>
+    
+    <style>
+        /* Base styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; 
+            background-color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #eee;
+        }
+
+        /* Status bar at the top */
+        #status-bar {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            background-color: #222;
+            border-bottom: 2px solid #000;
+            padding: 0 20px; 
+        }
+
+        .left-section {
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .status-item {
+            margin-right: 20px;
+            padding: 5px 15px;
+            background-color: #444;
+            border-radius: 4px;
+        }
+
+        .highlight {
+            color: #FFD700; 
+        }
+
+        .author-info {
+            font-size: 13px;
+            font-style: italic;
+            color: #aaa;
+        }
+
+        /* Default Desktop 2x2 Grid Layout */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            grid-template-rows: 50% 50%;
+            height: calc(100vh - 40px); 
+            width: 100vw;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 1px solid #111; 
+            box-sizing: border-box;
+            background-color: #fff; 
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            body, html {
+                overflow: auto; 
+            }
+
+            #status-bar {
+                flex-direction: column; 
+                height: auto;
+                padding: 10px;
+                gap: 5px;
+            }
+
+            .left-section {
+                flex-direction: column;
+                gap: 5px;
+                width: 100%;
+            }
+
+            .status-item {
+                margin-right: 0;
+                width: 90%;
+                text-align: center;
+            }
+
+            .grid-container {
+                display: flex;
+                flex-direction: column;
+                height: auto; 
+            }
+
+            iframe {
+                height: 50vh; 
+                border-bottom: 3px solid #000; 
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="status-bar">
+        <div class="left-section">
+            <div class="status-item">🌟 Last Loaded: <span id="last-loaded" class="highlight">--:--:--</span></div>
+            <div class="status-item">Refreshing in: <span id="countdown" class="highlight">05:00</span></div>
+        </div>
+        
+        <div class="author-info">
+            - From Bếu Ú with love &lt;3
+        </div>
+    </div>
+
+    <div class="grid-container">
+        <iframe id="panel1" src="https://www.mihong.vn/gia-vang-trong-nuoc" title="Mi Hồng"></iframe>
+        <iframe id="panel2" src="https://s.tradingview.com/embed-widget/single-quote/?locale=en#%7B%22symbol%22%3A%22OANDA%3AXAUUSD%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Afalse%7D" title="Global Spot Gold"></iframe>
+        <iframe id="panel3" src="https://sjc.com.vn/gia-vang-online" title="SJC"></iframe>
+        <iframe id="panel4" src="https://giavang.doji.vn/" title="DOJI"></iframe>
+    </div>
+
+    <script>
+        const REFRESH_SECONDS = 300; 
+        let timeRemaining = REFRESH_SECONDS;
+
+        function getCurrentTimeFormatted() {
+            return new Date().toLocaleTimeString();
+        }
+
+        function formatCountdown(seconds) {
+            const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const remainingSeconds = (seconds % 60).toString().padStart(2, '0');
+            return `${minutes}:${remainingSeconds}`;
+        }
+
+        function updateLastLoadedTime() {
+            document.getElementById('last-loaded').innerText = getCurrentTimeFormatted();
+        }
+
+        function refreshPanels() {
+            console.log("Refreshing domestic gold prices...");
+            
+            // REMOVED 'panel2' FROM THIS LIST
+            const iframes = ['panel1', 'panel3', 'panel4'];
+            
+            iframes.forEach((id, index) => {
+                setTimeout(() => {
+                    const iframe = document.getElementById(id);
+                    iframe.src = iframe.src; 
+                }, index * 500); 
+            });
+
+            updateLastLoadedTime();
+            timeRemaining = REFRESH_SECONDS; 
+        }
+
+        function timerTick() {
+            timeRemaining--;
+            
+            if (timeRemaining <= 0) {
+                refreshPanels();
+            } else {
+                document.getElementById('countdown').innerText = formatCountdown(timeRemaining);
+            }
+        }
+
+        updateLastLoadedTime();
+        document.getElementById('countdown').innerText = formatCountdown(timeRemaining);
+        setInterval(timerTick, 1000); 
+    </script>
+
+</body>
+</html>
